@@ -9,6 +9,28 @@ class HomePage extends Component {
     categorySocket.emit(EVENT_CATEGORY_SEND_ALL, true)
   }
 
+  createNewCategorie (item) {
+    console.log(item)
+  }
+
+  renderCategories (categories) {
+    if (!categories) {
+      return false
+    }
+
+    return categories.map((elm, index) => {
+      return (
+        <ul key={index}>
+          <li
+            onDoubleClick={() => this.createNewCategorie(elm)} >
+            {elm.description}
+          </li>
+          <ul>{this.renderCategories(elm.children)}</ul>
+        </ul>
+      );
+    })
+  }
+
   render () {
     const {items: categories} = this.props.Category
 
@@ -18,7 +40,7 @@ class HomePage extends Component {
           <button onClick={this.getCategories.bind(this)}>GET CATEGORIES</button>
         </div>
         <div>
-          {JSON.stringify(categories)}
+          {this.renderCategories(categories)}
         </div>
       </div>
     );
