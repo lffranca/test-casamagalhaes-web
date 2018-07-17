@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+
 import {categorySocket} from '../../store/ProviderStore';
-import {EVENT_CATEGORY_SEND_ALL, EVENT_CATEGORY_EDIT, EVENT_CATEGORY_NEW} from '../../constants/category-constant';
+import {EVENT_CATEGORY_SEND_ALL, EVENT_CATEGORY_EDIT, EVENT_CATEGORY_NEW, EVENT_CATEGORY_REMOVE} from '../../constants/category-constant';
 import {toggleMenuCategory, toggleEditCategory, toggleNewCategory} from '../../actions/CategoryActions'
 
 class HomePage extends Component {
@@ -108,7 +109,7 @@ class HomePage extends Component {
         marginLeft: '10px'
       }}>
         <button onClick={() => this.toggleNewCategory(item, true)}>+</button>
-        <button>-</button>
+        <button onClick={() => this.goDelete(item)}>-</button>
         <span style={{ marginLeft: '10px' }}>Clique 2x para editar</span>
       </span>
     )
@@ -204,6 +205,14 @@ class HomePage extends Component {
         </ul>
       )
     })
+  }
+
+  goDelete (elm) {
+     const result = window.confirm(`Deseja realmente deletar ${elm.description}?`);
+
+    if (result === true) {
+      categorySocket.emit(EVENT_CATEGORY_REMOVE, elm.id)
+    }
   }
 
   render () {
